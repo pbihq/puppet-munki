@@ -6,7 +6,6 @@
 class munki (
   String $software_repo_url,
   Integer $days_before_broken,
-  String $payload_organization,
   String $package_source,
   Boolean $auto_run_after_install,
 )
