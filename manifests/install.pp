@@ -4,6 +4,8 @@ class munki::install {
   $munkitools_version = $munki::munkitools_version
   $days_before_broken = $munki::days_before_broken
   $package_source     = $munki::package_source
+  $munki_location     = '/usr/local/munki'
+  $munki_middleware   = 'middleware_cloudfront.py'
 
   if $package_source == '' {
     $actual_package_source = "puppet:///modules/${module_name}/munkitools-${munkitools_version}.pkg"
@@ -50,7 +52,17 @@ class munki::install {
       Service['com.googlecode.munki.managedsoftwareupdate-check'],
       Service['com.googlecode.munki.managedsoftwareupdate-install'],
       Service['com.googlecode.munki.managedsoftwareupdate-manualcheck']
-    ]
+    ],
+    before        => File[$munki_middleware]
+  }
+
+  file { $munki_middleware:
+    ensure => file,
+    path   => "${munki_location}/${munki_middleware}",
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'wheel',
+    source => "puppet:///modules/${module_name}/${munki_middleware}"
   }
 
   if $facts['munki_dir_exists'] == false {
