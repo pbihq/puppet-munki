@@ -6,7 +6,7 @@ class munki::install {
   $package_source     = $munki::package_source
 
   if $package_source == '' {
-    $actual_package_source = "puppet:///modules/bigfiles/munki/munkitools-${munkitools_version}.pkg"
+    $actual_package_source = "puppet:///modules/${module_name}/munkitools-${munkitools_version}.pkg"
   } else {
     $actual_package_source = $package_source
   }
