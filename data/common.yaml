@@ -1,5 +1,5 @@
 ---
-munki::munkitools_version: '3.3.0.3515'
+munki::munkitools_version: '3.5.0.3621'
 munki::software_repo_url: ''
 munki::days_before_broken: 60
 munki::package_source: ''
