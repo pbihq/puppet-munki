@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>net.point-blank.daemon.munki_auto_run</string>
+    <key>Disabled</key>
+    <false/>
+    <key>ProgramArguments</key>
+    <array>
+            <string>/bin/bash</string>
+            <string>/usr/local/munki/auto_run.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
