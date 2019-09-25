@@ -1,6 +1,6 @@
 ---
-munki::munkitools_version: '3.5.0.3621'
-munki::software_repo_url: ''
+munki::munkitools_version: "3.6.2.3776"
+munki::software_repo_url: ""
 munki::days_before_broken: 60
-munki::package_source: ''
+munki::package_source: ""
 munki::auto_run_after_install: true
