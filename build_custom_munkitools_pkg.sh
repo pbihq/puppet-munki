@@ -18,8 +18,7 @@ export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 # Set up logging
 info()     { printf "[INFO] %s" "$*" 1> >(sed $'s,.*,\e[32m&\e[m,'); sleep 0.01; }
 warning()  { printf "[WARNING] %s" "$*" 1> >(sed $'s,.*,\e[33m&\e[m,'); }
-error()    { printf "[ERROR] %s" "$*" 1> >(sed $'s,.*,\e[35m&\e[m,'); }
-critical() { printf "[CRITICAL] %s\n" "$*" 1> >(sed $'s,.*,\e[31m&\e[m,'); sleep 0.01; exit 1; }
+error()    { printf "[ERROR] %s" "$*" 1> >(sed $'s,.*,\e[35m&\e[m,'); sleep 0.01; exit 1; }
 
 # ##############################################################################
 # Set unofficial Bash strict mode
@@ -27,7 +26,7 @@ critical() { printf "[CRITICAL] %s\n" "$*" 1> >(sed $'s,.*,\e[31m&\e[m,'); sleep
 set -euo pipefail
 IFS=$'\n\t'
 
-readonly workDir="$(pwd)"
+workDir="$(pwd)"
 
 # ##############################################################################
 
@@ -48,7 +47,7 @@ checkInstalled() {
 }
 
 createTempDir() {
-  readonly tmpDir=$(mktemp -d)
+  tmpDir=$(mktemp -d)
 }
 
 # Clean up step in case of errors and at the end
@@ -62,8 +61,10 @@ cloneMunki() {
   git clone "$munkiRepoUrl" "$tmpDir"
 }
 
+# Add 'rsa' module to list of modules to be installed
 editDependencies() {
-  printf "\nrsa" >> "$tmpDir/code/tools/py3_requirements.txt"
+  local -r modulesFile="$tmpDir/code/tools/py3_requirements.txt"
+  echo 'rsa'$'\n'"$(cat "$modulesFile")" > "$modulesFile"
 }
 
 buildPython() {
@@ -79,25 +80,25 @@ buildMunki() {
   mv ./munkitools*.pkg "$workDir"/files/
 }
 
-checkOS || critical "It seems you are not running macOS. Exiting..."
+checkOS || error "It seems you are not running macOS. Exiting..."
 
-checkRoot || critical "Please run this script with elevated privileges"
+checkRoot || error "Please run this script with elevated privileges"
 
-checkInstalled mktemp || critical "mktemp not found. Please install!"
+checkInstalled mktemp || error "mktemp not found. Please install!"
 
-checkInstalled git || critical "Git not found. Please install!"
+checkInstalled git || error "Git not found. Please install!"
 
 # Script startup checks
 trap cleanUp SIGINT TERM EXIT
 
 createTempDir
 
-cloneMunki || critical "Could not clone Munki repo"
+cloneMunki || error "Could not clone Munki repo"
 
-editDependencies || critical "Could not edit dependencies"
+editDependencies || error "Could not edit dependencies"
 
-buildPython || critical "Could not build custom Python framework"
+buildPython || error "Could not build custom Python framework"
 
-buildMunki || critical "An error occured during Munki build phase"
+buildMunki || error "An error occured during Munki build phase"
 
 exit 0
